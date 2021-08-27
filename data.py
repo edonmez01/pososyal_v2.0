@@ -1,0 +1,73 @@
+from dotenv import load_dotenv
+import os
+import sqlite3
+
+# The NEXT_WEEK variable is pulled from the environment.
+load_dotenv()
+NEXT_WEEK = os.getenv('NEXT_WEEK')
+BYE_TEAMS = set()
+
+# Database connection
+connection = sqlite3.connect('superlig_database.db')
+cursor = connection.cursor()
+
+# Converting the players database to a Python dictionary.
+players_dict = {}
+for row in cursor.execute('SELECT * FROM players'):
+    players_dict[row[0]] = row[1:]
+
+# Converting the matches database to a Python dictionary.
+matches_dict_raw = {}
+for row in cursor.execute('SELECT * FROM matches'):
+    matches_dict_raw[row[0]] = row[1:]
+
+matches_dict = {}
+for match_id, match_data in matches_dict_raw.items():
+    home = match_data[0]
+    away = match_data[1]
+    try:
+        home_prediction = int(match_data[5])
+        away_prediction = int(match_data[6])
+    except TypeError:  # If the predictions do not exist yet
+        print(f'Skipping {home} - {away}')
+        home_prediction = None
+        away_prediction = None
+    matches_dict[match_id] = {'home': home, 'away': away, 'home_prediction': home_prediction,
+                              'away_prediction': away_prediction}
+
+# Dictionary of all teams in the league, and predictions of their next matches.
+teams = {  # team: (score_prediction, concede_prediction)
+    'alanya': (-1, -1),
+    'ankara': (-1, -1),
+    'antalya': (-1, -1),
+    'basaksehir': (-1, -1),
+    'besiktas': (-1, -1),
+    'denizli': (-1, -1),
+    'erzurum': (-1, -1),
+    'fenerbahce': (-1, -1),
+    'galatasaray': (-1, -1),
+    'gaziantep': (-1, -1),
+    'gencler': (-1, -1),
+    'goztepe': (-1, -1),
+    'hatay': (-1, -1),
+    'karagumruk': (-1, -1),
+    'kasimpasa': (-1, -1),
+    'kayseri': (-1, -1),
+    'konya': (-1, -1),
+    'malatya': (-1, -1),
+    'rize': (-1, -1),
+    'sivas': (-1, -1),
+    'trabzon': (-1, -1)
+}
+
+for match_id, match_data in matches_dict.items():
+    if str(match_id)[:-2] == NEXT_WEEK:
+        home_prediction = match_data['home_prediction']
+        away_prediction = match_data['away_prediction']
+        teams[match_data['home']] = (home_prediction, away_prediction)
+        teams[match_data['away']] = (away_prediction, home_prediction)
+
+# If a team doesn't have a score prediction, we can understand that it won't play in the next week.
+for team, pred in teams.items():
+    if pred == (-1, -1):
+        BYE_TEAMS.add(team)

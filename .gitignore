@@ -1,0 +1,8 @@
+venv/
+old/
+node_modules/
+.idea
+draft.txt
+out.html
+test.py
+prev_fantasy_lineups/draft.txt
