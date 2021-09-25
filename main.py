@@ -38,21 +38,14 @@ for player_id, player_data in data.players_dict.items():
     if not len(started) == len(mins) == len(nonp_goals) == len(assists) == len(yellows) == len(reds) == len(ogs) == len(p_goals):
         print(f'Error: number of matches played, {player_id}, {player_name}')
 
-    nonp_goals_pm = mathematical.per_match_stats(nonp_goals, mins)
-    p_goals_pm = mathematical.per_match_stats(p_goals, mins)
-    assists_pm = mathematical.per_match_stats(assists, mins)
-    yellows_pm = mathematical.per_match_stats(yellows, mins)
-    reds_pm = mathematical.per_match_stats(reds, mins)
-    ogs_pm = mathematical.per_match_stats(ogs, mins)
-
     # Predictions of the stats in the player's next match.
     next_mins = min(mathematical.linear_continuation(starting_lineup_minutes), 90.)
-    next_nonp_goals = mathematical.linear_continuation(nonp_goals_pm) * next_mins / 90
-    next_p_goals = mathematical.linear_continuation(p_goals_pm) * next_mins / 90
-    next_assists = mathematical.linear_continuation(assists_pm) * next_mins / 90
-    next_yellows = min(mathematical.linear_continuation(yellows_pm) * next_mins / 90, 1.)
-    next_reds = min(mathematical.linear_continuation(reds_pm) * next_mins / 90, 1.)
-    next_ogs = mathematical.linear_continuation(ogs_pm) * next_mins / 90
+    next_nonp_goals = mathematical.next_value(nonp_goals, mins) * next_mins / 90
+    next_p_goals = mathematical.next_value(p_goals, mins) * next_mins / 90
+    next_assists = mathematical.next_value(assists, mins) * next_mins / 90
+    next_yellows = min(mathematical.next_value(yellows, mins) * next_mins / 90, 1.)
+    next_reds = min(mathematical.next_value(reds, mins) * next_mins / 90, 1.)
+    next_ogs = mathematical.next_value(ogs, mins) * next_mins / 90
     score_prediction, concede_prediction = data.teams[team]
 
     df_columns_dict = {
