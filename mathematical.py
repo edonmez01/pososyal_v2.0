@@ -8,19 +8,6 @@ y = np.piecewise(x, [x < 60, x >= 60], [2, 4])
 participation_pts = np.poly1d(np.polyfit(x, y, 1))
 
 
-def per_match_stats(values, minutes):
-    """This function takes a values list, and creates a cumulative per-match values list."""
-    out = []
-    total_value = 0
-    total_minutes = 0
-    for i in range(len(values)):
-        total_value += values[i]
-        total_minutes += minutes[i]
-        out.append(total_value / (total_minutes / 90))
-
-    return out.copy()
-
-
 def linear_continuation(values):
     """A basic linear regression model to predict the next discrete value in a list of values."""
     if not values:
@@ -35,6 +22,25 @@ def linear_continuation(values):
         return .0
     else:
         return result
+
+
+def next_value(values, minutes):
+    """A function to predict the next value in a list of values."""
+    if not values:
+        return .0
+    if len(values) == 1:
+        return float(values[0])
+
+    curr_minute = 0
+    x_axis = []
+    for m in minutes:
+        x_axis.append(curr_minute + m / 2)
+        curr_minute += m
+
+    regression = linregress(x_axis, values)
+    result = regression.intercept + (curr_minute + 45) * regression.slope
+
+    return max(.0, result)
 
 
 def universal_points(df):
