@@ -16,6 +16,9 @@ d_df = pd.DataFrame(columns=df_columns)
 m_df = pd.DataFrame(columns=df_columns)
 st_df = pd.DataFrame(columns=df_columns)
 
+total_num_of_players = 0
+total_matches_played = 0
+
 for player_id, player_data in data.players_dict.items():
     player_name = player_data[0]
     pos = player_data[1]
@@ -29,6 +32,9 @@ for player_id, player_data in data.players_dict.items():
     ogs = [int(i) for i in player_data[8].split(',')]
     p_goals = [int(i) for i in player_data[9].split(',')]
     team = player_data[10]
+
+    total_num_of_players += 1
+    total_matches_played += len(started)
 
     if team in data.BYE_TEAMS or (data.teams[team][0] is None and data.teams[team][1] is None):
         # If the team is having a bye week or if its match prediction does not exist yet
@@ -74,6 +80,9 @@ for player_id, player_data in data.players_dict.items():
     elif pos == 'st':
         st_df = st_df.append(df_columns_dict, ignore_index=True)
 
+# Calculation of the average number of matches played.
+avg_num_of_matches = total_matches_played / total_num_of_players
+
 # Calculation of points that are universal for all positions.
 for df in (gk_df, d_df, m_df, st_df):
     mathematical.universal_points(df)
@@ -93,3 +102,4 @@ all_players_df = all_players_df.sort_values(['total_points'], ascending=False).r
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:
     out_file.write(all_players_df.style.background_gradient().render())
+    out_file.write(f'<h1>AVG MATCHES PLAYED: {avg_num_of_matches}</h1>')
