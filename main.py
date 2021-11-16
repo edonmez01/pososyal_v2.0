@@ -8,7 +8,7 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.width', 1000)
 
 # Initializing dataframes
-df_columns = ['player_id', 'player_name', 'pos', 'team', 'next_mins', 'next_nonp_goals', 'next_p_goals', 'next_assists',
+df_columns = ['player_id', 'player_name', 'pos', 'team', 'price', 'next_mins', 'next_nonp_goals', 'next_p_goals', 'next_assists',
               'next_yellows', 'next_reds', 'next_ogs', 'score_prediction', 'concede_prediction']
 
 gk_df = pd.DataFrame(columns=df_columns)
@@ -32,6 +32,7 @@ for player_id, player_data in data.players_dict.items():
     ogs = [int(i) for i in player_data[8].split(',')]
     p_goals = [int(i) for i in player_data[9].split(',')]
     team = player_data[10]
+    price = player_data[11]
 
     total_num_of_players += 1
     total_matches_played += len(started)
@@ -59,6 +60,7 @@ for player_id, player_data in data.players_dict.items():
         'player_name': player_name,
         'pos': pos,
         'team': team,
+        'price': price,
         'next_mins': next_mins,
         'next_nonp_goals': next_nonp_goals,
         'next_p_goals': next_p_goals,
