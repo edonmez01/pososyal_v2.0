@@ -44,6 +44,8 @@ for player_id, player_data in data.players_dict.items():
     # This condition checks if there is a faulty row in the players database.
     if not len(started) == len(mins) == len(nonp_goals) == len(assists) == len(yellows) == len(reds) == len(ogs) == len(p_goals):
         print(f'Error: number of matches played, {player_id}, {player_name}')
+        continue
+    matches_played = len(started)
 
     # Predictions of the stats in the player's next match.
     next_mins = min(mathematical.linear_continuation(starting_lineup_minutes), 90.)
@@ -61,6 +63,7 @@ for player_id, player_data in data.players_dict.items():
         'pos': pos,
         'team': team,
         'price': price,
+        'matches_played': matches_played,
         'next_mins': next_mins,
         'next_nonp_goals': next_nonp_goals,
         'next_p_goals': next_p_goals,
