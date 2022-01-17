@@ -8,7 +8,8 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.width', 1000)
 
 # Initializing dataframes
-df_columns = ['player_id', 'player_name', 'pos', 'team', 'price', 'next_mins', 'next_nonp_goals', 'next_p_goals', 'next_assists',
+df_columns = ['player_id', 'player_name', 'pos', 'team', 'price', 'next_mins', 'next_nonp_goals', 'next_p_goals',
+              'next_assists',
               'next_yellows', 'next_reds', 'next_ogs', 'score_prediction', 'concede_prediction']
 
 gk_df = pd.DataFrame(columns=df_columns)
@@ -42,7 +43,8 @@ for player_id, player_data in data.players_dict.items():
         continue
 
     # This condition checks if there is a faulty row in the players database.
-    if not len(started) == len(mins) == len(nonp_goals) == len(assists) == len(yellows) == len(reds) == len(ogs) == len(p_goals):
+    if not len(started) == len(mins) == len(nonp_goals) == len(assists) == len(yellows) == len(reds) == len(ogs) == len(
+            p_goals):
         print(f'Error: number of matches played, {player_id}, {player_name}')
         continue
     matches_played = len(started)
@@ -101,10 +103,17 @@ mathematical.st_points(st_df)
 # Concatenating all 4 dataframes for final output.
 all_players_df = pd.concat((gk_df, d_df, m_df, st_df))
 
-# Sorting the dataframe by total points.
-all_players_df = all_players_df.sort_values(['total_points'], ascending=False).reset_index(drop=True)
+# Calculating the points per price for all players
+all_players_df['points_per_price'] = [0 if price < .1 else total_points / price
+                                      for price, total_points
+                                      in zip(all_players_df['price'], all_players_df['total_points'])]
+
+# Sorting the dataframes by total points.
+all_players_df1 = all_players_df.sort_values(['total_points'], ascending=False).reset_index(drop=True)
+all_players_df2 = all_players_df.sort_values(['points_per_price'], ascending=False).reset_index(drop=True)
 
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:
-    out_file.write(all_players_df.style.background_gradient().render())
+    out_file.write(all_players_df1.style.background_gradient().render())
+    out_file.write(all_players_df2.style.background_gradient().render())
     out_file.write(f'<h1>AVG MATCHES PLAYED: {avg_num_of_matches}</h1>')
