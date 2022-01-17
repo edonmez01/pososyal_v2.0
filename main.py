@@ -84,7 +84,7 @@ for player_id, player_data in data.players_dict.items():
         d_df = d_df.append(df_columns_dict, ignore_index=True)
     elif pos == 'm':
         m_df = m_df.append(df_columns_dict, ignore_index=True)
-    elif pos == 'st':
+    elif pos == 'st':   
         st_df = st_df.append(df_columns_dict, ignore_index=True)
 
 # Calculation of the average number of matches played.
@@ -103,17 +103,10 @@ mathematical.st_points(st_df)
 # Concatenating all 4 dataframes for final output.
 all_players_df = pd.concat((gk_df, d_df, m_df, st_df))
 
-# Calculating the points per price for all players
-all_players_df['points_per_price'] = [0 if price < .1 else total_points / price
-                                      for price, total_points
-                                      in zip(all_players_df['price'], all_players_df['total_points'])]
-
 # Sorting the dataframes by total points.
 all_players_df1 = all_players_df.sort_values(['total_points'], ascending=False).reset_index(drop=True)
-all_players_df2 = all_players_df.sort_values(['points_per_price'], ascending=False).reset_index(drop=True)
 
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:
     out_file.write(all_players_df1.style.background_gradient().render())
-    out_file.write(all_players_df2.style.background_gradient().render())
     out_file.write(f'<h1>AVG MATCHES PLAYED: {avg_num_of_matches}</h1>')
