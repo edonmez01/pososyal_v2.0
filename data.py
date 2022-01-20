@@ -5,6 +5,8 @@ import sqlite3
 # The NEXT_WEEK variable is pulled from the environment.
 load_dotenv()
 NEXT_WEEK = os.getenv('NEXT_WEEK')
+TOTAL_BUDGET = float(os.getenv('TOTAL_BUDGET'))
+MISSING_PLAYERS = set(int(s) for s in os.getenv('MISSING_PLAYERS').split(','))
 BYE_TEAMS = set()
 
 # Database connection

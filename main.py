@@ -1,3 +1,4 @@
+import budget
 import data
 import mathematical
 import pandas as pd
@@ -104,9 +105,16 @@ mathematical.st_points(st_df)
 all_players_df = pd.concat((gk_df, d_df, m_df, st_df))
 
 # Sorting the dataframes by total points.
-all_players_df1 = all_players_df.sort_values(['total_points'], ascending=False).reset_index(drop=True)
+all_players_df = all_players_df.sort_values(['total_points'], ascending=False).reset_index(drop=True)
+
+# Picking the suggested squad using a knapsack algorithm.
+suggested_squad = budget.budget_pick(all_players_df)
 
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:
-    out_file.write(all_players_df1.style.background_gradient().render())
+    out_file.write('<h3>Suggested Squad:</h3>')
+    for player in suggested_squad[:-1]:
+        out_file.write(player.name + ', ')
+    out_file.write(suggested_squad[-1].name)
+    out_file.write(all_players_df.style.background_gradient().render())
     out_file.write(f'<h1>AVG MATCHES PLAYED: {avg_num_of_matches}</h1>')
