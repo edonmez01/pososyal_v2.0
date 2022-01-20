@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 import sqlite3
 
-# The NEXT_WEEK variable is pulled from the environment.
+# Pulling the environment variables from the .env file.
 load_dotenv()
 NEXT_WEEK = os.getenv('NEXT_WEEK')
 TOTAL_BUDGET = float(os.getenv('TOTAL_BUDGET'))
