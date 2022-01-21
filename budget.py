@@ -42,7 +42,8 @@ def budget_pick(df):
                             (player.pos == 'st' and formation[3] == '4') or \
                             (player.pos in ('m', 'st') and int(formation[2]) + int(formation[3]) == 9) or \
                             (player.pos in ('d', 'm') and int(formation[1]) + int(formation[2]) == 11) or \
-                            (player.pos in ('d', 'st') and int(formation[1]) + int(formation[3]) == 9):
+                            (player.pos in ('d', 'st') and int(formation[1]) + int(formation[3]) == 9) or \
+                            (player.pos != 'gk' and int(formation[1]) + int(formation[2]) + int(formation[3]) == 13):
                         continue
 
                     same_team_count = 0
