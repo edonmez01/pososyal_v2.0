@@ -1,3 +1,4 @@
+import beautify
 import budget
 import data
 import mathematical
@@ -85,7 +86,7 @@ for player_id, player_data in data.players_dict.items():
         d_df = d_df.append(df_columns_dict, ignore_index=True)
     elif pos == 'm':
         m_df = m_df.append(df_columns_dict, ignore_index=True)
-    elif pos == 'st':   
+    elif pos == 'st':
         st_df = st_df.append(df_columns_dict, ignore_index=True)
 
 # Calculation of the average number of matches played.
@@ -112,9 +113,13 @@ suggested_squad = budget.budget_pick(all_players_df)
 
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:
+    out_file.write('<html>')
     out_file.write('<h3>Suggested Squad:</h3>')
     for player in suggested_squad[:-1]:
         out_file.write(player.name + ', ')
     out_file.write(suggested_squad[-1].name)
     out_file.write(all_players_df.style.background_gradient().render())
     out_file.write(f'<h1>AVG MATCHES PLAYED: {avg_num_of_matches}</h1>')
+    out_file.write('</html>')
+
+beautify.run()
