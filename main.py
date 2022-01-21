@@ -114,10 +114,12 @@ suggested_squad = budget.budget_pick(all_players_df)
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:
     out_file.write('<html>')
-    out_file.write('<h3>Suggested Squad:</h3>')
+    out_file.write('<h3 style="margin: 0">Suggested Squad:</h3>')
     for player in suggested_squad[:-1]:
         out_file.write(player.name + ', ')
     out_file.write(suggested_squad[-1].name)
+    out_file.write('<br>')
+    out_file.write('<br>')
     out_file.write(all_players_df.style.background_gradient().render())
     out_file.write(f'<h1>AVG MATCHES PLAYED: {avg_num_of_matches}</h1>')
     out_file.write('</html>')
