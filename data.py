@@ -6,7 +6,11 @@ import sqlite3
 load_dotenv()
 NEXT_WEEK = os.getenv('NEXT_WEEK')
 TOTAL_BUDGET = float(os.getenv('TOTAL_BUDGET'))
-MISSING_PLAYERS = set(int(s) for s in os.getenv('MISSING_PLAYERS').split(','))
+MISSING_PLAYERS = os.getenv('MISSING_PLAYERS')
+if MISSING_PLAYERS:
+    MISSING_PLAYERS = set(int(s) for s in MISSING_PLAYERS.split(','))
+else:
+    MISSING_PLAYERS = []
 BYE_TEAMS = set()
 
 # Database connection
