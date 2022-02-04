@@ -24,7 +24,7 @@ def budget_pick(df):
 
         new_knapsack = []
         for i in range(len(knapsack)):
-            capacity = (i - 1) / 4
+            capacity = i / 4
             new_knapsack.append(knapsack[i].copy())
             if player.price < capacity + .1:
                 alone_formation = [0] * 4
