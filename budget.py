@@ -34,7 +34,7 @@ def budget_pick(df):
                         (player.points > new_knapsack[i][alone_formation][1]):
                     new_knapsack[i][alone_formation] = ([player], player.points)
 
-                for formation, v in knapsack[int(4 * (capacity - player.price) + .1) + 1].items():
+                for formation, v in knapsack[int(4 * (capacity - player.price) + .1)].items():
                     if (sum(int(c) for c in formation) == 15) or \
                             (player.pos == 'gk' and formation[0] == '2') or \
                             (player.pos == 'd' and formation[1] == '6') or \
