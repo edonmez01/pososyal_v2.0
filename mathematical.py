@@ -91,6 +91,9 @@ def gk_points(df):
                           for total_points, next_mins, concede_prediction
                           in zip(df['total_points'], df['next_mins'], df['concede_prediction'])]
 
+    # 1/3 points for every save
+    df['total_points'] += df['next_saves'] / 3
+
 
 def d_points(df):
     # 8 points for every goal scored

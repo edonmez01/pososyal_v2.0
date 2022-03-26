@@ -36,6 +36,8 @@ for player_id, player_data in data.players_dict.items():
     p_goals = [int(i) for i in player_data[9].split(',')]
     team = player_data[10]
     price = player_data[11]
+    saves = [int(i) for i in player_data[12].split(',')]
+    ninety_min_saves = [saves[i] for i in range(len(saves)) if mins[i] == 90]
 
     total_num_of_players += 1
     total_matches_played += len(started)
@@ -60,6 +62,7 @@ for player_id, player_data in data.players_dict.items():
     next_reds = min(mathematical.next_value(reds, mins) * next_mins / 90, 1.)
     next_ogs = mathematical.next_value(ogs, mins) * next_mins / 90
     score_prediction, concede_prediction = data.teams[team]
+    next_saves = mathematical.linear_continuation(ninety_min_saves) * next_mins / 90
 
     df_columns_dict = {
         'player_id': player_id,
@@ -75,6 +78,7 @@ for player_id, player_data in data.players_dict.items():
         'next_yellows': next_yellows,
         'next_reds': next_reds,
         'next_ogs': next_ogs,
+        'next_saves': next_saves,
         'score_prediction': score_prediction,
         'concede_prediction': concede_prediction
     }
