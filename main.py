@@ -23,6 +23,8 @@ total_num_of_players = 0
 total_matches_played = 0
 
 for player_id, player_data in data.players_dict.items():
+    if player_data[11] < .1:
+        continue
     player_name = player_data[0]
     pos = player_data[1]
     started = [int(i) for i in player_data[2].split(',')]
