@@ -19,12 +19,12 @@ cursor = connection.cursor()
 
 # Converting the players database to a Python dictionary.
 players_dict = {}
-for row in cursor.execute('SELECT * FROM players'):
+for row in cursor.execute('SELECT * FROM players WHERE price > .1'):
     players_dict[row[0]] = row[1:]
 
 # Converting the matches database to a Python dictionary.
 matches_dict_raw = {}
-for row in cursor.execute('SELECT * FROM matches'):
+for row in cursor.execute('SELECT * FROM matches WHERE winner IS NULL'):
     matches_dict_raw[row[0]] = row[1:]
 
 matches_dict = {}
