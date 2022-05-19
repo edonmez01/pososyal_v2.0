@@ -19,8 +19,6 @@ def budget_pick(df):
     for player_index, player_row in df.iterrows():
         print(f'Processing player {player_index}')
         player = Player(player_row)
-        if player.price < .1 or player.id in data.MISSING_PLAYERS:
-            continue
 
         new_knapsack = []
         for i in range(len(knapsack)):

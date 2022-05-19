@@ -10,7 +10,13 @@ MISSING_PLAYERS = os.getenv('MISSING_PLAYERS')
 if MISSING_PLAYERS:
     MISSING_PLAYERS = set(int(s) for s in MISSING_PLAYERS.split(','))
 else:
-    MISSING_PLAYERS = []
+    MISSING_PLAYERS = set()
+GUARANTEED = os.getenv('GUARANTEED')
+if GUARANTEED:
+    GUARANTEED = set(int(s) for s in GUARANTEED.split(','))
+else:
+    GUARANTEED = set()
+
 BYE_TEAMS = set()
 
 # Database connection
