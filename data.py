@@ -30,7 +30,7 @@ for row in cursor.execute('SELECT * FROM players WHERE price > .1'):
 
 # Converting the matches database to a Python dictionary.
 matches_dict_raw = {}
-for row in cursor.execute('SELECT * FROM matches WHERE winner IS NULL'):
+for row in cursor.execute(f'SELECT * FROM matches WHERE id / 100 == {NEXT_WEEK}'):
     matches_dict_raw[row[0]] = row[1:]
 
 matches_dict = {}
