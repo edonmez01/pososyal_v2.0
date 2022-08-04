@@ -24,7 +24,7 @@ for row in cursor.execute('SELECT * FROM players WHERE price > .1'):
 
 # Converting the matches database to a Python dictionary.
 matches_dict_raw = {}
-for row in cursor.execute('SELECT * FROM matches WHERE winner IS NULL'):
+for row in cursor.execute('SELECT * FROM matches_22_23 WHERE winner IS NULL'):
     matches_dict_raw[row[0]] = row[1:]
 
 matches_dict = {}
@@ -43,27 +43,25 @@ for match_id, match_data in matches_dict_raw.items():
 
 # Dictionary of all teams in the league, and predictions of their next matches.
 teams = {  # team: (score_prediction, concede_prediction)
-    'alanya': (-1, -1),
-    'ankara': (-1, -1),
-    'antalya': (-1, -1),
-    'basaksehir': (-1, -1),
-    'besiktas': (-1, -1),
-    'denizli': (-1, -1),
-    'erzurum': (-1, -1),
-    'fenerbahce': (-1, -1),
-    'galatasaray': (-1, -1),
-    'gaziantep': (-1, -1),
-    'gencler': (-1, -1),
-    'goztepe': (-1, -1),
-    'hatay': (-1, -1),
-    'karagumruk': (-1, -1),
-    'kasimpasa': (-1, -1),
-    'kayseri': (-1, -1),
-    'konya': (-1, -1),
-    'malatya': (-1, -1),
-    'rize': (-1, -1),
-    'sivas': (-1, -1),
-    'trabzon': (-1, -1)
+    'Adana Demir': (-1, -1),
+    'Alanya': (-1, -1),
+    'Ankaragucu': (-1, -1),
+    'Antalya': (-1, -1),
+    'Besiktas': (-1, -1),
+    'Karagumruk': (-1, -1),
+    'Fenerbahce': (-1, -1),
+    'Galatasaray': (-1, -1),
+    'Gaziantep': (-1, -1),
+    'Giresun': (-1, -1),
+    'Hatay': (-1, -1),
+    'Basaksehir': (-1, -1),
+    'Kasimpasa': (-1, -1),
+    'Kayseri': (-1, -1),
+    'Konya': (-1, -1),
+    'Sivas': (-1, -1),
+    'Trabzon': (-1, -1),
+    'Umraniye': (-1, -1),
+    'Istanbul': (-1, -1)
 }
 
 for match_id, match_data in matches_dict.items():
