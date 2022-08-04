@@ -10,7 +10,13 @@ MISSING_PLAYERS = os.getenv('MISSING_PLAYERS')
 if MISSING_PLAYERS:
     MISSING_PLAYERS = set(int(s) for s in MISSING_PLAYERS.split(','))
 else:
-    MISSING_PLAYERS = []
+    MISSING_PLAYERS = set()
+GUARANTEED = os.getenv('GUARANTEED')
+if GUARANTEED:
+    GUARANTEED = set(int(s) for s in GUARANTEED.split(','))
+else:
+    GUARANTEED = set()
+
 BYE_TEAMS = set()
 
 # Database connection
@@ -24,7 +30,7 @@ for row in cursor.execute('SELECT * FROM players WHERE price > .1'):
 
 # Converting the matches database to a Python dictionary.
 matches_dict_raw = {}
-for row in cursor.execute('SELECT * FROM matches_22_23 WHERE winner IS NULL'):
+for row in cursor.execute('SELECT * FROM matches WHERE winner IS NULL'):
     matches_dict_raw[row[0]] = row[1:]
 
 matches_dict = {}
