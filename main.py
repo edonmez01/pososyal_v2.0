@@ -42,9 +42,8 @@ for player_id, player_data in data.players_dict.items():
     saves = [int(i) for i in player_data[12].split(',')]
     ninety_min_saves = [saves[i] for i in range(len(saves)) if mins[i] == 90]
 
-    # TODO: Uncomment this before gameweek 2
-    # if player_id not in data.GUARANTEED and started[-1] == 0:
-    #     continue
+    if player_id not in data.GUARANTEED and started[-1] == 0:
+        continue
 
     total_num_of_players += 1
     total_matches_played += len(started)
