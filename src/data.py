@@ -20,7 +20,7 @@ else:
 BYE_TEAMS = set()
 
 # Database connection
-connection = sqlite3.connect('superlig_database.db')
+connection = sqlite3.connect('../superlig_database.db')
 cursor = connection.cursor()
 
 # Converting the players database to a Python dictionary.

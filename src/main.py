@@ -122,7 +122,7 @@ all_players_df = all_players_df.sort_values(['total_points'], ascending=False).r
 suggested_squad = budget.budget_pick(all_players_df)
 
 # Final output to out.html with background gradients.
-with open('out.html', 'w') as out_file:
+with open('../out.html', 'w') as out_file:
     out_file.write('<html>')
     out_file.write('<h3 style="margin: 0">Suggested Squad:</h3>')
     for player in suggested_squad[:-1]:
