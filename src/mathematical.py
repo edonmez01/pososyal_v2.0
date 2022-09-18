@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import linregress
 import statistical
+import odds
 
 # Linear regression model for the calculation of participation points:
 x = np.linspace(0, 90)
@@ -56,11 +57,9 @@ def universal_points(df):
     df['total_points'] -= df['next_reds'] * 4
 
     # 1 point for a win, -1 point for a loss
-    df['total_points'] = [total_points + statistical.win_points[score_prediction - concede_prediction]
-                          if score_prediction >= concede_prediction
-                          else total_points - statistical.win_points[concede_prediction - score_prediction]
-                          for total_points, score_prediction, concede_prediction
-                          in zip(df['total_points'], df['score_prediction'], df['concede_prediction'])]
+    df['total_points'] = [total_points + odds.teams[team]['w_prob'] - odds.teams[team]['l_prob']
+                          for total_points, team
+                          in zip(df['total_points'], df['team'])]
 
     # -1 point for every own goal
     df['total_points'] -= df['next_ogs']
@@ -68,28 +67,28 @@ def universal_points(df):
 
 def gk_points(df):
     # 10 points for every goal scored
-    df['next_nonp_goals'] = [next_nonp_goals * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                             for next_nonp_goals, score_prediction
-                             in zip(df['next_nonp_goals'], df['score_prediction'])]
+    df['next_nonp_goals'] = [next_nonp_goals * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                             for next_nonp_goals, team
+                             in zip(df['next_nonp_goals'], df['team'])]
     df['total_points'] += (df['next_nonp_goals'] + df['next_p_goals']) * 10
 
     # 8 points for every assist
-    df['next_assists'] = [next_assists * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                          for next_assists, score_prediction
-                          in zip(df['next_assists'], df['score_prediction'])]
+    df['next_assists'] = [next_assists * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                          for next_assists, team
+                          in zip(df['next_assists'], df['team'])]
     df['total_points'] += df['next_assists'] * 8
 
     # -1 point for every goal conceded
-    df['total_points'] = [total_points - statistical.score_prob[concede_prediction] * next_mins / 90
-                          for total_points, concede_prediction, next_mins
-                          in zip(df['total_points'], df['concede_prediction'], df['next_mins'])]
+    df['total_points'] = [total_points - odds.teams[team]['xga'] * next_mins / 90
+                          for total_points, team, next_mins
+                          in zip(df['total_points'], df['team'], df['next_mins'])]
 
     # 5 points for clean sheet (if played for over 60 minutes)
-    df['total_points'] = [total_points + statistical.cs_prob[concede_prediction] * 5
+    df['total_points'] = [total_points + odds.teams[team]['cs_prob'] * 5
                           if next_mins >= 60
                           else total_points
-                          for total_points, next_mins, concede_prediction
-                          in zip(df['total_points'], df['next_mins'], df['concede_prediction'])]
+                          for total_points, next_mins, team
+                          in zip(df['total_points'], df['next_mins'], df['team'])]
 
     # 1/3 points for every save
     df['total_points'] += df['next_saves'] / 3
@@ -97,53 +96,53 @@ def gk_points(df):
 
 def d_points(df):
     # 8 points for every goal scored
-    df['next_nonp_goals'] = [next_nonp_goals * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                             for next_nonp_goals, score_prediction
-                             in zip(df['next_nonp_goals'], df['score_prediction'])]
+    df['next_nonp_goals'] = [next_nonp_goals * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                             for next_nonp_goals, team
+                             in zip(df['next_nonp_goals'], df['team'])]
     df['total_points'] += (df['next_nonp_goals'] + df['next_p_goals']) * 8
 
     # 4 points for every assist
-    df['next_assists'] = [next_assists * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                          for next_assists, score_prediction
-                          in zip(df['next_assists'], df['score_prediction'])]
+    df['next_assists'] = [next_assists * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                          for next_assists, team
+                          in zip(df['next_assists'], df['team'])]
     df['total_points'] += df['next_assists'] * 4
 
     # -1 point for every 2 goals conceded
-    df['total_points'] = [total_points - (statistical.score_prob[concede_prediction] * next_mins / 90) / 2
-                          for total_points, concede_prediction, next_mins
-                          in zip(df['total_points'], df['concede_prediction'], df['next_mins'])]
+    df['total_points'] = [total_points - (odds.teams[team]['xga'] * next_mins / 90) / 2
+                          for total_points, team, next_mins
+                          in zip(df['total_points'], df['team'], df['next_mins'])]
 
     # 3 points for clean sheet (if played for over 60 minutes)
-    df['total_points'] = [total_points + statistical.cs_prob[concede_prediction] * 3
+    df['total_points'] = [total_points + odds.teams[team]['cs_prob'] * 3
                           if next_mins >= 60
                           else total_points
-                          for total_points, next_mins, concede_prediction
-                          in zip(df['total_points'], df['next_mins'], df['concede_prediction'])]
+                          for total_points, next_mins, team
+                          in zip(df['total_points'], df['next_mins'], df['team'])]
 
 
 def m_points(df):
     # 6 points for every goal scored
-    df['next_nonp_goals'] = [next_nonp_goals * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                             for next_nonp_goals, score_prediction
-                             in zip(df['next_nonp_goals'], df['score_prediction'])]
+    df['next_nonp_goals'] = [next_nonp_goals * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                             for next_nonp_goals, team
+                             in zip(df['next_nonp_goals'], df['team'])]
     df['total_points'] += (df['next_nonp_goals'] + df['next_p_goals']) * 6
 
     # 3 points for every assist
-    df['next_assists'] = [next_assists * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                          for next_assists, score_prediction
-                          in zip(df['next_assists'], df['score_prediction'])]
+    df['next_assists'] = [next_assists * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                          for next_assists, team
+                          in zip(df['next_assists'], df['team'])]
     df['total_points'] += df['next_assists'] * 3
 
 
 def st_points(df):
     # 5 points for every goal scored
-    df['next_nonp_goals'] = [next_nonp_goals * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                             for next_nonp_goals, score_prediction
-                             in zip(df['next_nonp_goals'], df['score_prediction'])]
+    df['next_nonp_goals'] = [next_nonp_goals * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                             for next_nonp_goals, team
+                             in zip(df['next_nonp_goals'], df['team'])]
     df['total_points'] += (df['next_nonp_goals'] + df['next_p_goals']) * 5
 
     # 3 points for every assist
-    df['next_assists'] = [next_assists * statistical.score_prob[score_prediction] / statistical.AVG_GOALS_PG
-                          for next_assists, score_prediction
-                          in zip(df['next_assists'], df['score_prediction'])]
+    df['next_assists'] = [next_assists * odds.teams[team]['xg'] / statistical.AVG_GOALS_PG
+                          for next_assists, team
+                          in zip(df['next_assists'], df['team'])]
     df['total_points'] += df['next_assists'] * 3

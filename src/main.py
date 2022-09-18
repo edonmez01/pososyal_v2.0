@@ -3,6 +3,7 @@ import budget
 import data
 import mathematical
 import pandas as pd
+import odds
 
 # Setting pandas options for console display
 pd.set_option('display.max_columns', 25)
@@ -48,8 +49,8 @@ for player_id, player_data in data.players_dict.items():
     total_num_of_players += 1
     total_matches_played += len(started)
 
-    if team in data.BYE_TEAMS or (data.teams[team][0] is None and data.teams[team][1] is None):
-        # If the team is having a bye week or if its match prediction does not exist yet
+    if team not in odds.teams:
+        # If the team is having a bye week
         continue
 
     # This condition checks if there is a faulty row in the players database.
@@ -67,7 +68,8 @@ for player_id, player_data in data.players_dict.items():
     next_yellows = min(mathematical.next_value(yellows, mins) * next_mins / 90, 1.)
     next_reds = min(mathematical.next_value(reds, mins) * next_mins / 90, 1.)
     next_ogs = mathematical.next_value(ogs, mins) * next_mins / 90
-    score_prediction, concede_prediction = data.teams[team]
+    score_prediction = odds.teams[team]['xg']
+    concede_prediction = odds.teams[team]['xga']
     next_saves = mathematical.linear_continuation(ninety_min_saves) * next_mins / 90
 
     df_columns_dict = {
@@ -122,7 +124,7 @@ all_players_df = all_players_df.sort_values(['total_points'], ascending=False).r
 suggested_squad = budget.budget_pick(all_players_df)
 
 # Final output to out.html with background gradients.
-with open('../out.html', 'w') as out_file:
+with open('out.html', 'w') as out_file:
     out_file.write('<html>')
     out_file.write('<h3 style="margin: 0">Suggested Squad:</h3>')
     for player in suggested_squad[:-1]:
