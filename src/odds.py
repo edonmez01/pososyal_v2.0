@@ -181,6 +181,8 @@ matches = []
 for i in range(len(match_names)):
     matches.append(Match(match_names[i], odds_lst[i]))
 
+print(f'Odds of {len(matches)} match(es) scraped from nesine')
+
 teams = {}
 for match in matches:
     teams[match.home_team] = {'xg': match.home_xg, 'xga': match.away_xg, 'cs_prob': match.home_cs_prob, 'w_prob': match.home_w_prob, 'l_prob': match.away_w_prob}
