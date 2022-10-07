@@ -143,7 +143,9 @@ class Match:
         self.away_w_prob = self.away_nw_odds / (self.away_w_odds + self.away_nw_odds)
 
 
-os.environ["Path"] += os.pathsep + r'C:\Program Files\gecko'
+if os.name != 'posix':
+    os.environ["Path"] += os.pathsep + r'C:\Program Files\gecko'
+
 driver = webdriver.Firefox()
 driver.get('https://www.nesine.com/iddaa?et=1&lc=584&le=3&ocg=MS-2%2C5&gt=Pop%C3%BCler')
 driver.implicitly_wait(10)
@@ -151,8 +153,9 @@ driver.implicitly_wait(10)
 driver.maximize_window()
 driver.find_element(By.ID, 'c-p-bn').click()
 
-driver.find_element(By.CLASS_NAME, 'more-btn').click()
-time.sleep(1)
+if os.name != 'posix':
+    driver.find_element(By.CLASS_NAME, 'more-btn').click()
+    time.sleep(1)
 
 for more_button in driver.find_elements(By.CLASS_NAME, 'more-btn'):
     more_button.click()
