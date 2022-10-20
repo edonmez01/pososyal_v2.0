@@ -153,6 +153,8 @@ driver.implicitly_wait(10)
 driver.maximize_window()
 driver.find_element(By.ID, 'c-p-bn').click()
 
+# wtf is this bug, I still don't understand
+# when clicking a list of buttons in the page sequentially, selenium sometimes clicks the first button twice
 if os.name != 'posix':
     driver.find_element(By.CLASS_NAME, 'more-btn').click()
     time.sleep(1)
@@ -187,6 +189,13 @@ for i in range(len(match_names)):
 print(f'Odds of {len(matches)} match(es) scraped from nesine')
 
 teams = {}
+match_predictions_string = ''
 for match in matches:
+    match_predictions_string += f'{match.home_team} - {match.away_team}:<br>'
+    match_predictions_string += f'xG: {match.home_xg} - {match.away_xg}<br>'
+    match_predictions_string += f'CS prob: {match.home_cs_prob} - {match.away_cs_prob}<br>'
+    match_predictions_string += f'win prob: {match.home_w_prob} - {match.away_w_prob}<br>'
+    match_predictions_string += '<br>'
+
     teams[match.home_team] = {'xg': match.home_xg, 'xga': match.away_xg, 'cs_prob': match.home_cs_prob, 'w_prob': match.home_w_prob, 'l_prob': match.away_w_prob}
     teams[match.away_team] = {'xg': match.away_xg, 'xga': match.home_xg, 'cs_prob': match.away_cs_prob, 'w_prob': match.away_w_prob, 'l_prob': match.home_w_prob}

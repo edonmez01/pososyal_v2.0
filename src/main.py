@@ -145,7 +145,7 @@ with open('out.html', 'w') as out_file:
     out_file.write('<br>')
     out_file.write('<br>')
     out_file.write(all_players_df.style.background_gradient().render())
-    out_file.write(f'<h1>AVG MATCHES PLAYED: {avg_num_of_matches}</h1>')
+    out_file.write(odds.match_predictions_string)
     out_file.write('</html>')
 
 beautify.run()
