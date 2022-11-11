@@ -16,6 +16,8 @@ if GUARANTEED:
     GUARANTEED = set(int(s) for s in GUARANTEED.split(','))
 else:
     GUARANTEED = set()
+EXTRA_STRIKER = int(os.getenv('EXTRA_STRIKER'))
+FIVE_PLAYERS_FROM_TEAM = int(os.getenv('FIVE_PLAYERS_FROM_TEAM'))
 
 # Database connection
 connection = sqlite3.connect('superlig_database.db')

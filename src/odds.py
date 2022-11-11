@@ -197,5 +197,19 @@ for match in matches:
     match_predictions_string += f'win prob: {match.home_w_prob} - {match.away_w_prob}<br>'
     match_predictions_string += '<br>'
 
-    teams[match.home_team] = {'xg': match.home_xg, 'xga': match.away_xg, 'cs_prob': match.home_cs_prob, 'w_prob': match.home_w_prob, 'l_prob': match.away_w_prob}
-    teams[match.away_team] = {'xg': match.away_xg, 'xga': match.home_xg, 'cs_prob': match.away_cs_prob, 'w_prob': match.away_w_prob, 'l_prob': match.home_w_prob}
+    home_coach_points = match.home_w_prob - 2 * match.away_w_prob
+    away_coach_points = -home_coach_points
+
+    teams[match.home_team] = {'xg': match.home_xg, 'xga': match.away_xg, 'cs_prob': match.home_cs_prob,
+                              'w_prob': match.home_w_prob, 'l_prob': match.away_w_prob,
+                              'coach_points': home_coach_points}
+    teams[match.away_team] = {'xg': match.away_xg, 'xga': match.home_xg, 'cs_prob': match.away_cs_prob,
+                              'w_prob': match.away_w_prob, 'l_prob': match.home_w_prob,
+                              'coach_points': away_coach_points}
+
+max_coach_points = 0
+max_coach_points_team = ''
+for team_name, v in teams.items():
+    if v['coach_points'] > max_coach_points:
+        max_coach_points = v['coach_points']
+        max_coach_points_team = team_name

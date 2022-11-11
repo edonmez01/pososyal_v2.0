@@ -1,5 +1,7 @@
 import data
 
+MAX_PLAYERS_FROM_TEAM = 5 if data.FIVE_PLAYERS_FROM_TEAM else 4
+
 
 class Player:
     def __init__(self, player_row):
@@ -33,22 +35,35 @@ def budget_pick(df):
                     new_knapsack[i][alone_formation] = ([player], player.points)
 
                 for formation, v in knapsack[int(4 * (capacity - player.price) + .1)].items():
-                    if (sum(int(c) for c in formation) == 15) or \
-                            (player.pos == 'gk' and formation[0] == '2') or \
-                            (player.pos == 'd' and formation[1] == '6') or \
-                            (player.pos == 'm' and formation[2] == '6') or \
-                            (player.pos == 'st' and formation[3] == '4') or \
-                            (player.pos in ('m', 'st') and int(formation[2]) + int(formation[3]) == 9) or \
-                            (player.pos in ('d', 'm') and int(formation[1]) + int(formation[2]) == 11) or \
-                            (player.pos in ('d', 'st') and int(formation[1]) + int(formation[3]) == 9) or \
-                            (player.pos != 'gk' and int(formation[1]) + int(formation[2]) + int(formation[3]) == 13):
-                        continue
+                    if data.EXTRA_STRIKER:
+                        if (sum(int(c) for c in formation) == 16) or \
+                                (player.pos == 'gk' and formation[0] == '2') or \
+                                (player.pos == 'd' and formation[1] == '6') or \
+                                (player.pos == 'm' and formation[2] == '6') or \
+                                (player.pos == 'st' and formation[3] == '5') or \
+                                (player.pos in ('m', 'st') and int(formation[2]) + int(formation[3]) == 10) or \
+                                (player.pos in ('d', 'm') and int(formation[1]) + int(formation[2]) == 11) or \
+                                (player.pos in ('d', 'st') and int(formation[1]) + int(formation[3]) == 10) or \
+                                (player.pos != 'gk' and int(formation[1]) + int(formation[2]) + int(
+                                    formation[3]) == 14):
+                            continue
+                    else:
+                        if (sum(int(c) for c in formation) == 15) or \
+                                (player.pos == 'gk' and formation[0] == '2') or \
+                                (player.pos == 'd' and formation[1] == '6') or \
+                                (player.pos == 'm' and formation[2] == '6') or \
+                                (player.pos == 'st' and formation[3] == '4') or \
+                                (player.pos in ('m', 'st') and int(formation[2]) + int(formation[3]) == 9) or \
+                                (player.pos in ('d', 'm') and int(formation[1]) + int(formation[2]) == 11) or \
+                                (player.pos in ('d', 'st') and int(formation[1]) + int(formation[3]) == 9) or \
+                                (player.pos != 'gk' and int(formation[1]) + int(formation[2]) + int(formation[3]) == 13):
+                            continue
 
                     same_team_count = 0
                     for selected_player in v[0]:
                         if player.team == selected_player.team:
                             same_team_count += 1
-                    if same_team_count == 4:
+                    if same_team_count == MAX_PLAYERS_FROM_TEAM:
                         continue
 
                     new_formation = [int(c) for c in formation]
@@ -64,8 +79,8 @@ def budget_pick(df):
     max_total_pts = 0
     max_formation = 'None'
     for formation, v in knapsack[-1].items():
-        if sum(int(c) for c in formation) < 15:
-            continue
+        # if sum(int(c) for c in formation) < 15:
+        #     continue
         if v[1] > max_total_pts:
             max_total_pts = v[1]
             max_formation = formation

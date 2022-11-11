@@ -143,6 +143,8 @@ with open('out.html', 'w') as out_file:
         out_file.write(player.name + ', ')
     out_file.write(suggested_squad[-1].name)
     out_file.write('<br>')
+    out_file.write('Coach: ' + odds.max_coach_points_team)
+    out_file.write('<br>')
     out_file.write('<br>')
     out_file.write(all_players_df.style.background_gradient().render())
     out_file.write(odds.match_predictions_string)
