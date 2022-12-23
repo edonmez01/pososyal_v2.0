@@ -78,15 +78,18 @@ def budget_pick(df):
 
     max_total_pts = 0
     max_formation = 'None'
-    for formation, v in knapsack[-1].items():
-        # if sum(int(c) for c in formation) < 15:
-        #     continue
-        if v[1] > max_total_pts:
-            max_total_pts = v[1]
-            max_formation = formation
+    max_i = -1
+    for i in range(len(knapsack)):
+        for formation, v in knapsack[i].items():
+            # if sum(int(c) for c in formation) < 15:
+            #     continue
+            if v[1] > max_total_pts:
+                max_total_pts = v[1]
+                max_formation = formation
+                max_i = i
 
     suggested_squad = []
-    for player in knapsack[-1][max_formation][0]:
+    for player in knapsack[max_i][max_formation][0]:
         suggested_squad.append(player)
 
     suggested_squad.sort(key=lambda x: {'gk': 0, 'd': 1, 'm': 2, 'st': 3}[x.pos])
