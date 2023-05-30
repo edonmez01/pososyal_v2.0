@@ -1,8 +1,11 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 import os
 import re
+import sys
 import time
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
 import collections
 
 
@@ -169,6 +172,8 @@ for match_row in driver.find_elements(By.CLASS_NAME, 'code-time-name'):
     if '-' in match_name:
         match_names.append(match_name)
 
+# match_names.pop(2)
+
 odds_lst = []
 for panel in driver.find_elements(By.CLASS_NAME, 'panel-default'):
     if panel.find_element(By.CLASS_NAME, 'panel-title').find_element(By.TAG_NAME, 'a').text.strip().lower() == 'maç skoru':
@@ -181,6 +186,10 @@ for panel in driver.find_elements(By.CLASS_NAME, 'panel-default'):
         odds_lst.append(odds_dict.copy())
 
 driver.quit()
+
+if len(match_names) != len(odds_lst):
+    print('Scraping error: array length mismatch')
+    sys.exit(1)
 
 matches = []
 for i in range(len(match_names)):

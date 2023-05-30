@@ -5,6 +5,8 @@ import mathematical
 import pandas as pd
 import odds
 
+ONLY_GUARANTEED = True
+
 # Setting pandas options for console display
 pd.set_option('display.max_columns', 25)
 pd.set_option('display.max_rows', 500)
@@ -24,6 +26,10 @@ total_num_of_players = 0
 total_matches_played = 0
 
 for player_id, player_data in data.players_dict.items():
+    if ONLY_GUARANTEED:
+        if player_id not in data.GUARANTEED:
+            continue
+
     if player_data[11] < .1 or (player_id not in data.GUARANTEED and player_id in data.MISSING_PLAYERS):
         continue
 
