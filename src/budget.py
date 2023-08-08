@@ -76,13 +76,35 @@ def budget_pick(df):
 
         knapsack = new_knapsack.copy()
 
+    for team, v in data.managers_dict.items():
+        price, points = v
+        print(f'Processing manager of {team}')
+        new_knapsack = []
+        for i in range(len(knapsack)):
+            capacity = i / 4
+            new_knapsack.append(knapsack[i].copy())
+            if price < capacity + .1:
+                for formation, v1 in knapsack[int(4 * (capacity - price) + .1)].items():
+                    if data.EXTRA_STRIKER:
+                        if sum(int(c) for c in formation) != 16:
+                            continue
+                    else:
+                        if sum(int(c) for c in formation) != 15:
+                            continue
+
+                    new_formation = formation + '1'
+
+                    if (new_formation not in new_knapsack[i]) or \
+                            (v1[1] + points > new_knapsack[i][new_formation][1]):
+                        new_knapsack[i][new_formation] = (v1[0] + [team], v1[1] + points)
+
+        knapsack = new_knapsack.copy()
+
     max_total_pts = 0
     max_formation = 'None'
     max_i = -1
     for i in range(len(knapsack)):
         for formation, v in knapsack[i].items():
-            # if sum(int(c) for c in formation) < 15:
-            #     continue
             if v[1] > max_total_pts:
                 max_total_pts = v[1]
                 max_formation = formation
@@ -92,5 +114,9 @@ def budget_pick(df):
     for player in knapsack[max_i][max_formation][0]:
         suggested_squad.append(player)
 
+    if isinstance(suggested_squad[-1], str):
+        suggested_manager = suggested_squad.pop()
+    else:
+        suggested_manager = 'None'
     suggested_squad.sort(key=lambda x: {'gk': 0, 'd': 1, 'm': 2, 'st': 3}[x.pos])
-    return suggested_squad
+    return suggested_squad, suggested_manager

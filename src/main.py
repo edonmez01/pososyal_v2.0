@@ -5,7 +5,7 @@ import mathematical
 import pandas as pd
 import odds
 
-ONLY_GUARANTEED = True
+ONLY_GUARANTEED = False
 
 # Setting pandas options for console display
 pd.set_option('display.max_columns', 25)
@@ -139,7 +139,7 @@ all_players_df = pd.concat((gk_df, d_df, m_df, st_df))
 all_players_df = all_players_df.sort_values(['total_points'], ascending=False).reset_index(drop=True)
 
 # Picking the suggested squad using a knapsack algorithm.
-suggested_squad = budget.budget_pick(all_players_df)
+suggested_squad, suggested_manager = budget.budget_pick(all_players_df)
 
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:
@@ -149,7 +149,7 @@ with open('out.html', 'w') as out_file:
         out_file.write(player.name + ', ')
     out_file.write(suggested_squad[-1].name)
     out_file.write('<br>')
-    out_file.write('Coach: ' + odds.max_coach_points_team)
+    out_file.write('Coach: ' + suggested_manager)
     out_file.write('<br>')
     out_file.write('<br>')
     out_file.write(all_players_df.style.background_gradient().render())

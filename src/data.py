@@ -25,5 +25,9 @@ cursor = connection.cursor()
 
 # Converting the players database to a Python dictionary.
 players_dict = {}
-for row in cursor.execute('SELECT * FROM players WHERE price > .1'):
+for row in cursor.execute("SELECT * FROM players WHERE price > .1 and position != 'man'"):
     players_dict[row[0]] = row[1:]
+
+managers_dict = {}
+for row in cursor.execute("SELECT * FROM players WHERE price > .1 and position == 'man'"):
+    managers_dict[row[11]] = (row[12], 0)

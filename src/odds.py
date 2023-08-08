@@ -5,8 +5,11 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementNotInteractableException
 
 import collections
+
+import data
 
 
 def convert_odds_to_prob(odds_dict, prob_dict):
@@ -45,7 +48,10 @@ class Match:
             'Sivasspor': 'Sivas',
             'Fenerbahçe': 'Fenerbahce',
             'Alanyaspor': 'Alanya',
-            'Giresunspor': 'Giresun'
+            'Giresunspor': 'Giresun',
+            'Pendikspor': 'Pendik',
+            'Samsunspor': 'Samsun',
+            'Rizespor': 'Rize'
         }
         self.raw_home_team, self.raw_away_team = raw_name.split(' - ')
         self.home_team = self.name_map[self.raw_home_team]
@@ -154,12 +160,17 @@ driver.get('https://www.nesine.com/iddaa?et=1&lc=584&le=3&ocg=MS-2%2C5&gt=Pop%C3
 driver.implicitly_wait(10)
 
 driver.maximize_window()
-driver.find_element(By.ID, 'c-p-bn').click()
+while True:
+    try:
+        driver.find_element(By.ID, 'c-p-bn').click()
+        break
+    except ElementNotInteractableException:
+        pass
 
 # wtf is this bug, I still don't understand
 # when clicking a list of buttons in the page sequentially, selenium sometimes clicks the first button twice
 if os.name != 'posix':
-    driver.find_element(By.CLASS_NAME, 'more-btn').click()
+    # driver.find_element(By.CLASS_NAME, 'more-btn').click()
     time.sleep(1)
 
 for more_button in driver.find_elements(By.CLASS_NAME, 'more-btn'):
@@ -172,7 +183,8 @@ for match_row in driver.find_elements(By.CLASS_NAME, 'code-time-name'):
     if '-' in match_name:
         match_names.append(match_name)
 
-# match_names.pop(2)
+# for _ in range(4):
+#     match_names.pop()
 
 odds_lst = []
 for panel in driver.find_elements(By.CLASS_NAME, 'panel-default'):
@@ -215,6 +227,12 @@ for match in matches:
     teams[match.away_team] = {'xg': match.away_xg, 'xga': match.home_xg, 'cs_prob': match.away_cs_prob,
                               'w_prob': match.away_w_prob, 'l_prob': match.home_w_prob,
                               'coach_points': away_coach_points}
+
+    if match.home_team in data.managers_dict:
+        data.managers_dict[match.home_team] = (data.managers_dict[match.home_team][0], home_coach_points)
+    if match.away_team in data.managers_dict:
+        data.managers_dict[match.away_team] = (data.managers_dict[match.away_team][0], away_coach_points)
+
 
 max_coach_points = 0
 max_coach_points_team = ''
