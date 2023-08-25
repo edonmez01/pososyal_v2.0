@@ -6,6 +6,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import NoSuchElementException
 
 import collections
 
@@ -164,7 +165,7 @@ while True:
     try:
         driver.find_element(By.ID, 'c-p-bn').click()
         break
-    except ElementNotInteractableException:
+    except NoSuchElementException or ElementNotInteractableException:
         pass
 
 # wtf is this bug, I still don't understand
