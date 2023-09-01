@@ -5,8 +5,10 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import ElementClickInterceptedException
 
 import collections
 
@@ -165,13 +167,13 @@ while True:
     try:
         driver.find_element(By.ID, 'c-p-bn').click()
         break
-    except NoSuchElementException or ElementNotInteractableException:
+    except:
         pass
 
 # wtf is this bug, I still don't understand
 # when clicking a list of buttons in the page sequentially, selenium sometimes clicks the first button twice
 if os.name != 'posix':
-    # driver.find_element(By.CLASS_NAME, 'more-btn').click()
+    driver.find_element(By.CLASS_NAME, 'more-btn').click()
     time.sleep(1)
 
 for more_button in driver.find_elements(By.CLASS_NAME, 'more-btn'):
