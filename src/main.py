@@ -66,6 +66,8 @@ for player_id, player_data in data.players_dict.items():
         continue
     matches_played = len(started)
 
+    total_mins = sum(mins)
+
     # Predictions of the stats in the player's next match.
     next_mins = min(mathematical.linear_continuation(starting_lineup_minutes), 90.)
     next_nonp_goals = mathematical.next_value(nonp_goals, mins) * next_mins / 90
@@ -106,7 +108,8 @@ for player_id, player_data in data.players_dict.items():
         'next_ogs': next_ogs,
         'next_saves': next_saves,
         'score_prediction': score_prediction,
-        'concede_prediction': concede_prediction
+        'concede_prediction': concede_prediction,
+        'total_mins': total_mins
     }
 
     # Adding the newly created player to the appropriate dataframe as a new row.
