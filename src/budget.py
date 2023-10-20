@@ -1,7 +1,11 @@
 import data
 
 MAX_PLAYERS_FROM_TEAM = 5 if data.FIVE_PLAYERS_FROM_TEAM else 4
-MAX_UNCERTAINTY = 3.2 if data.EXTRA_STRIKER else 3
+
+try:
+    MAX_UNCERTAINTY = 16 / (data.NEXT_WEEK - 1) if data.EXTRA_STRIKER else 15 / (data.NEXT_WEEK - 1)
+except ZeroDivisionError:
+    MAX_UNCERTAINTY = float('inf')
 
 
 class Player:
@@ -12,10 +16,10 @@ class Player:
         self.team = player_row['team']
         self.price = player_row['price']
         self.points = player_row['total_points']
-        self.uncertainty = 90 / player_row['total_mins']
+        self.uncertainty = player_row['uncertainty']
 
 
-def budget_pick(df):
+def budget_pick(df, avg_uncertainty):
     knapsack = []
     for _ in range(int(4 * data.TOTAL_BUDGET + .1) + 1):
         knapsack.append({})

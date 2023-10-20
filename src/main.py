@@ -24,6 +24,8 @@ st_df = pd.DataFrame(columns=df_columns)
 
 total_num_of_players = 0
 total_matches_played = 0
+total_minutes = 0
+total_uncertainty = 0
 
 for player_id, player_data in data.players_dict.items():
     if ONLY_GUARANTEED:
@@ -52,9 +54,6 @@ for player_id, player_data in data.players_dict.items():
     if player_id not in data.GUARANTEED and started[-1] == 0:
         continue
 
-    total_num_of_players += 1
-    total_matches_played += len(started)
-
     if team not in odds.teams:
         # If the team is having a bye week
         continue
@@ -64,9 +63,14 @@ for player_id, player_data in data.players_dict.items():
             p_goals):
         print(f'Error: number of matches played, {player_id}, {player_name}')
         continue
-    matches_played = len(started)
 
-    total_mins = sum(mins)
+    matches_played = len(started)
+    total_num_of_players += 1
+    total_matches_played += len(started)
+    total_mins_player = sum(mins)
+    total_minutes += total_mins_player
+    uncertainty = 90 / total_mins_player
+    total_uncertainty += uncertainty
 
     # Predictions of the stats in the player's next match.
     next_mins = min(mathematical.linear_continuation(starting_lineup_minutes), 90.)
@@ -109,7 +113,8 @@ for player_id, player_data in data.players_dict.items():
         'next_saves': next_saves,
         'score_prediction': score_prediction,
         'concede_prediction': concede_prediction,
-        'total_mins': total_mins
+        'total_mins': total_mins_player,
+        'uncertainty': uncertainty
     }
 
     # Adding the newly created player to the appropriate dataframe as a new row.
@@ -124,6 +129,10 @@ for player_id, player_data in data.players_dict.items():
 
 # Calculation of the average number of matches played.
 avg_num_of_matches = total_matches_played / total_num_of_players
+avg_minutes_played = total_minutes / total_num_of_players
+avg_uncertainty = total_uncertainty / total_num_of_players
+
+print(f'Average minutes played: {avg_minutes_played}')
 
 # Calculation of points that are universal for all positions.
 for df in (gk_df, d_df, m_df, st_df):
@@ -142,7 +151,7 @@ all_players_df = pd.concat((gk_df, d_df, m_df, st_df))
 all_players_df = all_players_df.sort_values(['total_points'], ascending=False).reset_index(drop=True)
 
 # Picking the suggested squad using a knapsack algorithm.
-suggested_squad, suggested_manager = budget.budget_pick(all_players_df)
+suggested_squad, suggested_manager = budget.budget_pick(all_players_df, avg_uncertainty)
 
 # Final output to out.html with background gradients.
 with open('out.html', 'w') as out_file:

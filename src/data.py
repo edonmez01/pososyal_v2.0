@@ -4,7 +4,7 @@ import sqlite3
 
 # Pulling the environment variables from the .env file.
 load_dotenv()
-NEXT_WEEK = os.getenv('NEXT_WEEK')
+NEXT_WEEK = int(os.getenv('NEXT_WEEK'))
 TOTAL_BUDGET = float(os.getenv('TOTAL_BUDGET'))
 MISSING_PLAYERS = os.getenv('MISSING_PLAYERS')
 if MISSING_PLAYERS:
