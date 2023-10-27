@@ -166,6 +166,7 @@ driver.maximize_window()
 while True:
     try:
         driver.find_element(By.ID, 'c-p-bn').click()
+        time.sleep(1)
         break
     except:
         pass
