@@ -3,7 +3,7 @@ import data
 MAX_PLAYERS_FROM_TEAM = 5 if data.FIVE_PLAYERS_FROM_TEAM else 4
 
 try:
-    MAX_UNCERTAINTY = 16 / (data.NEXT_WEEK - 1) if data.EXTRA_STRIKER else 15 / (data.NEXT_WEEK - 1)
+    MAX_UNCERTAINTY = 16 / ((data.NEXT_WEEK - 1) % 19) if data.EXTRA_STRIKER else 15 / ((data.NEXT_WEEK - 1) % 19)
 except ZeroDivisionError:
     MAX_UNCERTAINTY = float('inf')
 
