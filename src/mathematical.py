@@ -1,12 +1,13 @@
 import numpy as np
+from scipy.optimize import curve_fit
 from scipy.stats import linregress
 import statistical
 import odds
 
 # Linear regression model for the calculation of participation points:
-x = np.linspace(0, 90)
-y = np.piecewise(x, [x < 60, x >= 60], [2, 4])
-participation_pts = np.poly1d(np.polyfit(x, y, 1))
+participation_x = np.linspace(0, 90)
+participation_y = np.piecewise(participation_x, [participation_x < 60, participation_x >= 60], [2, 4])
+participation_pts = np.poly1d(np.polyfit(participation_x, participation_y, 1))
 
 
 def linear_continuation(values):
@@ -38,8 +39,9 @@ def next_value(values, minutes):
         x_axis.append(curr_minute + m / 2)
         curr_minute += m
 
-    regression = linregress(x_axis, values)
-    result = regression.intercept + (curr_minute + 45) * regression.slope
+    # Weighted least squares fit
+    opt_a, opt_b = curve_fit(lambda x, a, b: a * x + b, x_axis, values, sigma=[1 / m for m in minutes])[0]
+    result = opt_a * (curr_minute + 45) + opt_b
 
     return max(.0, result)
 
