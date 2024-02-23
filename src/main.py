@@ -74,22 +74,22 @@ for player_id, player_data in data.players_dict.items():
 
     # Predictions of the stats in the player's next match.
     next_mins = min(mathematical.linear_continuation(starting_lineup_minutes), 90.)
-    next_nonp_goals = mathematical.next_value(nonp_goals, mins) * next_mins / 90
+    next_nonp_goals = mathematical.next_value(nonp_goals, mins, next_mins)
     if sum(1 for n in nonp_goals if n == 0) == len(nonp_goals) - 1:
         next_nonp_goals = (sum(nonp_goals) / len(nonp_goals))
-    next_p_goals = mathematical.next_value(p_goals, mins) * next_mins / 90
+    next_p_goals = mathematical.next_value(p_goals, mins, next_mins)
     if sum(1 for n in p_goals if n == 0) == len(p_goals) - 1:
         next_p_goals = (sum(p_goals) / len(p_goals))
-    next_assists = mathematical.next_value(assists, mins) * next_mins / 90
+    next_assists = mathematical.next_value(assists, mins, next_mins)
     if sum(1 for n in assists if n == 0) == len(assists) - 1:
         next_assists = (sum(assists) / len(assists))
-    next_yellows = min(mathematical.next_value(yellows, mins) * next_mins / 90, 1.)
+    next_yellows = min(mathematical.next_value(yellows, mins, next_mins), 1.)
     if sum(1 for n in yellows if n == 0) == len(yellows) - 1:
         next_yellows = (sum(yellows) / len(yellows))
-    next_reds = min(mathematical.next_value(reds, mins) * next_mins / 90, 1.)
+    next_reds = min(mathematical.next_value(reds, mins, next_mins), 1.)
     if sum(1 for n in reds if n == 0) == len(reds) - 1:
         next_reds = (sum(reds) / len(reds))
-    next_ogs = mathematical.next_value(ogs, mins) * next_mins / 90
+    next_ogs = mathematical.next_value(ogs, mins, next_mins)
     if sum(1 for n in ogs if n == 0) == len(ogs) - 1:
         next_ogs = (sum(ogs) / len(ogs))
     score_prediction = odds.teams[team]['xg']

@@ -26,7 +26,7 @@ def linear_continuation(values):
         return result
 
 
-def next_value(values, minutes):
+def next_value(values, minutes, next_mins):
     """A function to predict the next value in a list of values."""
     if not values:
         return .0
@@ -41,7 +41,7 @@ def next_value(values, minutes):
 
     # Weighted least squares fit
     opt_a, opt_b = curve_fit(lambda x, a, b: a * x + b, x_axis, values, sigma=[1 / m for m in minutes])[0]
-    result = opt_a * (curr_minute + 45) + opt_b
+    result = opt_a * (curr_minute + next_mins / 2) + opt_b
 
     return max(.0, result)
 
