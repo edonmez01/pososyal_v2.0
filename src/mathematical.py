@@ -40,9 +40,12 @@ def next_value(values, minutes, next_mins):
         curr_minute += m
 
     # Weighted least squares fit
-    opt_a, opt_b = curve_fit(lambda x, a, b: a * x + b, x_axis, values, sigma=[1 / m for m in minutes])[0]
-    result = opt_a * (curr_minute + next_mins / 2) + opt_b
+    opt_a, opt_b = curve_fit(f=lambda x, a, b: a * x + b,
+                             xdata=x_axis,
+                             ydata=[90 * values[i] / minutes[i] for i in range(len(values))],
+                             sigma=[1 / m for m in minutes])[0]
 
+    result = (opt_a * (curr_minute + next_mins / 2) + opt_b) * next_mins / 90
     return max(.0, result)
 
 
