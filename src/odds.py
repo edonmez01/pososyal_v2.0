@@ -174,7 +174,10 @@ while True:
 # wtf is this bug, I still don't understand
 # when clicking a list of buttons in the page sequentially, selenium sometimes clicks the first button twice
 if os.name != 'posix':
-    driver.find_element(By.CLASS_NAME, 'more-btn').click()
+    try:
+        driver.find_element(By.CLASS_NAME, 'more-btn').click()
+    except:
+        time.sleep(.1)
     time.sleep(1)
 
 for more_button in driver.find_elements(By.CLASS_NAME, 'more-btn'):
