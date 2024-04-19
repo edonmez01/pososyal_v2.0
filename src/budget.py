@@ -57,13 +57,23 @@ def budget_pick(df, avg_uncertainty):
                                 formation[3]) == 14):
                         continue
                 else:
+                    # if (sum(int(c) for c in formation) == 15) or \
+                    #         (player.pos == 'gk' and formation[0] == '2') or \
+                    #         (player.pos == 'd' and formation[1] == '6') or \
+                    #         (player.pos == 'm' and formation[2] == '6') or \
+                    #         (player.pos == 'st' and formation[3] == '4') or \
+                    #         (player.pos in ('m', 'st') and int(formation[2]) + int(formation[3]) == 9) or \
+                    #         (player.pos in ('d', 'm') and int(formation[1]) + int(formation[2]) == 11) or \
+                    #         (player.pos in ('d', 'st') and int(formation[1]) + int(formation[3]) == 9) or \
+                    #         (player.pos != 'gk' and int(formation[1]) + int(formation[2]) + int(formation[3]) == 13):
+                    #     continue
                     if (sum(int(c) for c in formation) == 15) or \
                             (player.pos == 'gk' and formation[0] == '2') or \
-                            (player.pos == 'd' and formation[1] == '6') or \
-                            (player.pos == 'm' and formation[2] == '6') or \
+                            (player.pos == 'd' and formation[1] == '5') or \
+                            (player.pos == 'm' and formation[2] == '5') or \
                             (player.pos == 'st' and formation[3] == '4') or \
                             (player.pos in ('m', 'st') and int(formation[2]) + int(formation[3]) == 9) or \
-                            (player.pos in ('d', 'm') and int(formation[1]) + int(formation[2]) == 11) or \
+                            (player.pos in ('d', 'm') and int(formation[1]) + int(formation[2]) == 9) or \
                             (player.pos in ('d', 'st') and int(formation[1]) + int(formation[3]) == 9) or \
                             (player.pos != 'gk' and int(formation[1]) + int(formation[2]) + int(formation[3]) == 13):
                         continue
